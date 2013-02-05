@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="client/css/bootstrap.min.css">
+    <link rel="stylesheet" href="client/css/bootstrap-responsive.min.css">
+    <link rel="stylesheet" href="client/css/style.css">
+    <link type="image/x-icon" rel="shortcut icon" href="client/static/favicon.ico">
+    <script src="client/js/libs/jquery.min.js"></script>
+    <script src="http://polin.nodejitsu.jit.su/socket.io/socket.io.js"></script>
+    <script>
+      var websocket = io.connect("http://polin.nodejitsu.jit.su");
+
+      $(document).on('ready',function(){
+        function open_ws(){
+          websocket.on("ws_getData", getMessage);
+        }
+
+         function getMessage(json){
+          $('<div/>', { class: 'row', id: json.id }).prependTo('.span12');
+          $('<div/>', { class: 'span12 grid', html: json.text, id: 'item_'+json.id }).appendTo('#'+json.id);
+          $('<a/>', { class: 'btn btn-link right', html: 'Eliminar', href: './'+json.id }).appendTo('#item_'+json.id);
+        }
+
+        var db = eval('(' + '@json_data' + ')'); 
+        for( i=0; i<db.length; i++ ){
+          getMessage( db[i] );
+        }
+
+        open_ws();
+      });
+    </script>
+</head>
+<body>
+	
+
+<div class="container">
+  <div class="row-fluid">
+    <div class="span12"></div>
+  </div>
+</div>
+
+<div class="row-fluid">
+    <div class="span4">
+      <div class="logo">
+         <a href="http://nodejs.org/" target="_blank"><img src="client/static/nodejs.png"></a>
+      </div>
+    </div>
+    <div class="span4">
+      <div class="logo">
+         <a href="http://mongodb.org/" target="_blank"><img src="client/static/mongodb.png"></a>
+      </div>
+    </div>
+    <div class="span4">
+      <div class="logo">
+         <a href="http://socket.io/" target="_blank"><img src="client/static/socket-io.png"></a>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row-fluid">
+    <div class="span4">
+      <div class="logo">
+         <a href="http://detodo.com.ni/" target="_blank"><img src="client/static/de-todo.png"></a>
+      </div>
+    </div>
+    <div class="span4">
+      <div class="logo">
+        <a href="http://co-labora.net/" target="_blank"><img src="client/static/co-labora.png"></a>
+      </div>
+    </div>
+    <div class="span4">
+      <div class="logo">
+         <a href="http://clubdibujo.com/" target="_blank"><img src="client/static/club-dibujo.png"></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span4">
+      <div class="logo">
+         <a href="http://expressjs.com/" target="_blank"><img src="client/static/expressjs.png"></a>
+      </div>
+    </div>
+    <div class="span4">
+      <div class="logo">
+         <a href="http://mongoosejs.com/" target="_blank"><img src="client/static/mongoose.png"></a>
+      </div>
+    </div>
+    <div class="span4">
+      <div class="logo">
+         <a href="http://nodejitsu.com/" target="_blank"><img src="client/static/nodejitsu.png"></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span4">
+      <div class="logo">
+         <a href="http://appfog.com/" target="_blank"><img src="client/static/appfog.png"></a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
