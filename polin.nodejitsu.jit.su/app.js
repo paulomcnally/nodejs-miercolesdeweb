@@ -13,13 +13,27 @@ Mongodb
 ------------------------------------------ */ 
 var mongoose = require('mongoose');
 
-var db = mongoose.createConnection('mongodb://nodejitsu:a4e657d07ae5c1092f52efa80a536fbd@linus.mongohq.com:10010/nodejitsudb3859585665');
+var db = mongoose.createConnection('mongodb://appfog:polin@linus.mongohq.com:10039/fb_slideshow_paulomcnally');
 
 var schema = mongoose.Schema({ number: 'string', text: 'string', id: 'string' });
 
 var Sms = db.model('Sms', schema);
 
 var Message = db.model('Sms'); 
+
+
+
+
+function strip_tags (input, allowed) {
+  allowed = (((allowed || "") + "").toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
+  var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
+    commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+  return input.replace(commentsAndPhpTags, '').replace(tags, function ($0, $1) {
+    return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+  });
+}
+
+
 
 /*
 
@@ -41,6 +55,8 @@ var server = http.createServer(function (req, res){
       var GET = url.parse(req.url,true);
                         if( GET.search != "" ){
                                 GET.query.id = crypto.createHash('md5').update(new Date().toISOString()).digest("hex");
+
+                                GET.query.text = strip_tags(GET.query.text,'<a>')
 
                                 var sms_data = new Sms( GET.query );
 
